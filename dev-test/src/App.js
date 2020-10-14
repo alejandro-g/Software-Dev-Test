@@ -1,9 +1,13 @@
 import React from 'react';
 
+//components imported and nested
+import PostList from './components/PostList'; 
+
 function App() {
   return (
-    <div className="App">
-      
+    <div id="main">
+      <h1>List of posts</h1>
+      <PostList />
     </div>
   );
 }
