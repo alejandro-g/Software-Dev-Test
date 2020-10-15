@@ -8,8 +8,8 @@ import PostList from './components/PostList';
 //apollo client setup 
 //uri es el endpoint al cual se le estan haciendo requests/queries
 const client = new ApolloClient({
-  uri: 'https://graphqlzero.almansi.me/api',
-})
+  uri: 'https://graphqlzero.almansi.me/api'
+});
 
 function App() {
   return (
