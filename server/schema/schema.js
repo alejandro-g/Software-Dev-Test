@@ -4,6 +4,9 @@ entre object types y como se puede interactuar con el grafo como tal*/
 const graphql = require('graphql');
 const _ = require('lodash'); 
 
+const Post = require('../models/post');
+const User = require('../models/user'); 
+
 //different properties from the graphql package
 const {GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLID, GraphQLList} = graphql; 
 
@@ -33,7 +36,7 @@ const PostType = new GraphQLObjectType ({
         user: {
             type: UserType,
             resolve(parent, args){
-                return _.find(users, {id: parent.userID});
+                //return _.find(users, {id: parent.userID});
             }
         }
     })
@@ -44,7 +47,13 @@ const UserType = new GraphQLObjectType ({
     fields: () => ({
         id: {type: GraphQLID},
         name: {type: GraphQLString},
-        userName: {type: GraphQLString}
+        userName: {type: GraphQLString},
+        post: {
+            type: PostType, 
+            resolve(parent, args){
+                //return _.find(posts, {userID: parent.id}); 
+            }
+        }
     })
 }); 
 
@@ -60,31 +69,53 @@ const RootQuery = new GraphQLObjectType ({
             args: {id: {type: GraphQLID}},
             resolve(parent, args){
                 //code to get data from db/other source
-                return _.find(posts, {id: args.id}); 
+                //return _.find(posts, {id: args.id}); 
             }
         },
         user: {
             type: UserType,
             args: {id: {type: GraphQLID}}, 
             resolve(parent, args){
-                return _.find(users, {id: args.id}); 
+                //return _.find(users, {id: args.id}); 
             }
         },
         posts: {
             type: new GraphQLList(PostType),
             resolve(parent, args){
-                return posts
+                //return posts
             }
         },
         users: {
             type: new GraphQLList(UserType),
             resolve(parent, args){
-                return users
+               // return users
             }
         }
     }
 }); 
 
+//setting up mutations
+const Mutation = new GraphQLObjectType({
+    name: 'Mutation',
+    fields: {
+        addUser: {
+            type: UserType, 
+            args: {
+                name: {type: GraphQLString },
+                userName: {type: GraphQLString }
+            }, 
+            resolve(parent, args){
+                let user = new User({
+                    name: args.name,
+                    userName: args.userName
+                }); 
+                return user.save(); 
+            }
+        }
+    }
+})
+
 module.exports = new GraphQLSchema ({
-    query: RootQuery
+    query: RootQuery,
+    mutation: Mutation
 }); 
