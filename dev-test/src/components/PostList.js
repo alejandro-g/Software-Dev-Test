@@ -1,17 +1,16 @@
 import React from 'react';
 import {gql} from 'apollo-boost'; 
+//binds graphql a react 
 import { graphql } from 'react-apollo';
 
 const getPostsQuery = gql`
     {
-        posts {
-            Title
-            User
-            Username
-            Body
+        post {
+            title
+            body
         }
     }
-`
+`; 
 
 function PostList() {
   return (

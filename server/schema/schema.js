@@ -5,7 +5,7 @@ const graphql = require('graphql');
 const _ = require('lodash'); 
 
 //different properties from the graphql package
-const {GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLID} = graphql; 
+const {GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLID, GraphQLList} = graphql; 
 
 //dummy data
 
@@ -51,6 +51,7 @@ const UserType = new GraphQLObjectType ({
 
 //el rootquery sirve para que el front end pueda ingresar al graph con el query que el usuario introduzca.
 //Pidiendo como argumentos el id del post que quiere encontrar
+//Asimismo, se puede hacer un query para todos los posts o users
 const RootQuery = new GraphQLObjectType ({
     name: 'RootQueryType', 
     fields: {
@@ -67,6 +68,18 @@ const RootQuery = new GraphQLObjectType ({
             args: {id: {type: GraphQLID}}, 
             resolve(parent, args){
                 return _.find(users, {id: args.id}); 
+            }
+        },
+        posts: {
+            type: new GraphQLList(PostType),
+            resolve(parent, args){
+                return posts
+            }
+        },
+        users: {
+            type: new GraphQLList(UserType),
+            resolve(parent, args){
+                return users
             }
         }
     }

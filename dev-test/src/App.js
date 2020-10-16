@@ -1,4 +1,4 @@
-import React from 'react';
+import React,  from 'react';
 import ApolloClient from 'apollo-boost'; 
 import {ApolloProvider} from 'react-apollo'; 
 
@@ -8,9 +8,11 @@ import PostList from './components/PostList';
 //apollo client setup 
 //uri es el endpoint al cual se le estan haciendo requests/queries
 const client = new ApolloClient({
-  uri: 'https://graphqlzero.almansi.me/api'
+  uri: 'https://localhost:4000/graphql'
 });
 
+//los tags de apolloclient permite que se consiga la data del endpoint del client
+//y que lo pueda inyectar en el componente cuando se hagan queries 
 function App() {
   return (
     <ApolloProvider client={client}>
