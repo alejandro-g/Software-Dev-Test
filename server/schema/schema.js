@@ -2,27 +2,16 @@
 entre object types y como se puede interactuar con el grafo como tal*/
 
 const graphql = require('graphql');
+const { toNumber } = require('lodash');
 const _ = require('lodash'); 
 
 const Post = require('../models/post');
-const User = require('../models/user'); 
+const User = require('../models/user');
+
+const ObjectID = require('graphql-scalar-objectid'); 
 
 //different properties from the graphql package
-const {GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLID, GraphQLList} = graphql; 
-
-//dummy data
-
-var posts = [
-    {title: 'Hello', body: 'asjkajaa', userID: '2', id: '1', userID: '1'},
-    {title: 'Goodbye', body: 'qwerty', userID: '3', id: '2', userID: '2'},
-    {title: 'Food', body: 'aadasas', userID: '4', id: '3', userID: '3'}, 
-]
-
-var users = [
-    {name: "Leanne Graham", userName: "Bert", id: '1'}, 
-    {name: "Ervin Howell", userName: "Antonette", id: '2'},
-    {name: "Clementine Bauch", userName: "Samantha", id: '3'},
-]
+const {GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLID, GraphQLList, GraphQLInt} = graphql; 
 
 //definiendo como se "verá" el objeto dentro del grafo
 //los fields se hacen wrap en una funcion para que si existen dependencias de untipo a otro
@@ -33,10 +22,12 @@ const PostType = new GraphQLObjectType ({
         id: {type: GraphQLID},
         title: {type: GraphQLString},
         body: {type: GraphQLString},
+        userId: {type: ObjectID},
         user: {
             type: UserType,
             resolve(parent, args){
-                //return _.find(users, {id: parent.userID});
+                console.log(parent); 
+                return User.findOne({userId: args.id}); 
             }
         }
     })
@@ -45,15 +36,10 @@ const PostType = new GraphQLObjectType ({
 const UserType = new GraphQLObjectType ({
     name: 'User',
     fields: () => ({
-        id: {type: GraphQLID},
+        id: {type: ObjectID},
         name: {type: GraphQLString},
-        userName: {type: GraphQLString},
-        post: {
-            type: PostType, 
-            resolve(parent, args){
-                //return _.find(posts, {userID: parent.id}); 
-            }
-        }
+        username: {type: GraphQLString},
+
     })
 }); 
 
@@ -66,35 +52,38 @@ const RootQuery = new GraphQLObjectType ({
     fields: {
         post: {
             type: PostType, 
-            args: {id: {type: GraphQLID}},
+            args: {id: {type: ObjectID}},
             resolve(parent, args){
-                //code to get data from db/other source
-                //return _.find(posts, {id: args.id}); 
+                return Post.findById(args.id); 
             }
         },
         user: {
             type: UserType,
-            args: {id: {type: GraphQLID}}, 
+            args: {id: {type: ObjectID}}, 
             resolve(parent, args){
-                //return _.find(users, {id: args.id}); 
+                console.log('args', args);
+                //return _.find(users, {id: args.id});
+                return User.findOne({userId: args.id}); 
             }
         },
         posts: {
             type: new GraphQLList(PostType),
             resolve(parent, args){
                 //return posts
+                return Post.find({}); //retorna todos los elementos
             }
         },
         users: {
             type: new GraphQLList(UserType),
             resolve(parent, args){
                // return users
+               return User.find({}); 
             }
         }
     }
 }); 
 
-//setting up mutations
+//setting up mutations, le permite al usuario poder agregar posts/users a la db
 const Mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: {
@@ -102,14 +91,32 @@ const Mutation = new GraphQLObjectType({
             type: UserType, 
             args: {
                 name: {type: GraphQLString },
-                userName: {type: GraphQLString }
+                username: {type: GraphQLString }
             }, 
             resolve(parent, args){
                 let user = new User({
                     name: args.name,
-                    userName: args.userName
+                    username: args.username
                 }); 
                 return user.save(); 
+            }
+        },
+        addPost: {
+            type: PostType,
+            args: {
+                title: { type: GraphQLString },
+                body: { type: GraphQLString }, 
+                userId: { type: GraphQLID }, 
+                id: { type: GraphQLID }
+            },
+            resolve(parent, args){
+                let post = new Post({
+                    title: args.title, 
+                    body: args.body, 
+                    userId: args.userId,  
+                    id: args.id 
+                });
+                return post.save(); 
             }
         }
     }
