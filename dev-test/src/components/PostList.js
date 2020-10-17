@@ -17,14 +17,24 @@ const getPostsQuery = gql`
     }
   }
 `
-
 class PostList extends Component {
+    displayPosts(){
+        var data = this.props.data; 
+        if(data.loading){
+            return <div>Loading Posts...</div>
+        }else{
+            return data.posts.map(post =>{
+                return(
+                    <li key={post.id}>{post.title}</li>
+                )
+            })
+        }
+    }
     render(){
-        console.log(this.props); 
         return(
             <div>
                 <ul id="post-list">
-                    <li>Post List</li>
+                    { this.displayPosts() }
                 </ul>
             </div>
         );
