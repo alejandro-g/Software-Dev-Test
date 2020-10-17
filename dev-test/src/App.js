@@ -8,7 +8,7 @@ import PostList from './components/PostList';
 //apollo client setup 
 //uri es el endpoint al cual se le estan haciendo requests/queries
 const client = new ApolloClient({
-  uri: 'https://localhost:4000/graphql'
+  uri: 'http://localhost:4000/graphql'
 });
 
 //los tags de apolloclient permite que se consiga la data del endpoint del client
