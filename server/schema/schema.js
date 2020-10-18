@@ -25,8 +25,7 @@ const PostType = new GraphQLObjectType ({
         userId: {type: ObjectID},
         user: {
             type: UserType,
-            resolve(parent, args){
-                console.log(parent); 
+            resolve(parent, args){ 
                 return User.findOne({userId: args.id}); 
             }
         }

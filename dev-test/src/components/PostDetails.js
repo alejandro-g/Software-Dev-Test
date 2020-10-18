@@ -26,10 +26,10 @@ class PostDetails extends Component {
         if(post){
             return(
                 <div>
-                    <h2>{post.title}</h2>
-                    <p>{post.body}</p>
-                    <p>{post.user.name}</p>
-                    <p>{post.user.username}</p>
+                    <h2>Post Title: {post.title}</h2>
+                    <p><b>Post body:</b> {post.body}</p>
+                    <p><b>User's name:</b> {post.user.name}</p>
+                    <p><b>User's username: </b>{post.user.username}</p>
                 </div>
             )
         }else{
@@ -42,7 +42,7 @@ class PostDetails extends Component {
         return(
             <div id="post-details">
                 {this.displayPostDetails()}
-            </div>
+            </div>         
         );
     }
 }
