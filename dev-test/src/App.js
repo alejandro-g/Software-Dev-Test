@@ -4,6 +4,7 @@ import {ApolloProvider} from 'react-apollo';
 
 //components imported and nested
 import PostList from './components/PostList'; 
+import PostDetails from './components/PostDetails';
 
 //apollo client setup 
 //uri es el endpoint al cual se le estan haciendo requests/queries
