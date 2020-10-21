@@ -49,7 +49,7 @@ class PostList extends Component {
                     { this.displayPosts() }
                 </ul>
                 <PostDetails postId={this.state.selected}/>
-            </div>
+            </div>  
         );
     }
 }

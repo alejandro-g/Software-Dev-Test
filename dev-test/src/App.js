@@ -18,6 +18,7 @@ function App() {
     <ApolloProvider client={client}>
       <div id="main">
         <h1>List of posts</h1>
+        <h2>Test</h2>
         <PostList/>
       </div>
     </ApolloProvider>
